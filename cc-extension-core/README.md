@@ -1,5 +1,7 @@
 # cc-extension-core
 
+[NPM](https://npmjs.org/package/cc-extension-core)
+
 The shared runtime behind Tangent's unofficial browser extensions that display
 CharaChorder device layouts on typing websites:
 
