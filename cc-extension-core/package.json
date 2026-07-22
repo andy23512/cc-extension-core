@@ -1,0 +1,67 @@
+{
+  "name": "cc-extension-core",
+  "version": "0.0.1",
+  "description": "The shared runtime of Tangent's unofficial browser extensions that display CharaChorder device layouts on typing websites.",
+  "homepage": "https://github.com/andy23512/cc-extension-core",
+  "bugs": {
+    "url": "https://github.com/andy23512/cc-extension-core/issues",
+    "email": "andy23512@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andy23512/cc-extension-core.git"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@cc-extension-core/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./background": {
+      "@cc-extension-core/source": "./src/background.ts",
+      "types": "./dist/background.d.ts",
+      "import": "./dist/background.js",
+      "default": "./dist/background.js"
+    },
+    "./style.css": "./style/index.css",
+    "./tailwind": "./build-preset/tailwind.config.cjs",
+    "./postcss": "./build-preset/postcss.config.cjs",
+    "./webpack": "./build-preset/webpack/index.cjs"
+  },
+  "files": [
+    "dist",
+    "style",
+    "build-preset",
+    "!**/*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "copy-webpack-plugin": "^9.0.1",
+    "webpack-livereload-plugin": "^3.0.2",
+    "webpack-merge": "^5.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.4",
+    "classnames": "^2.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-moveable": "^0.56.0",
+    "tangent-cc-lib": ">=0.0.55",
+    "webextension-polyfill": "^0.12.0",
+    "zustand": "^5.0.8"
+  },
+  "peerDependenciesMeta": {
+    "copy-webpack-plugin": { "optional": true },
+    "webpack-livereload-plugin": { "optional": true },
+    "webpack-merge": { "optional": true }
+  }
+}

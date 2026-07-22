@@ -1,0 +1,10 @@
+import {
+  KEYBOARD_LAYOUTS_FROM_KBDLAYOUT,
+  KEYBOARD_LAYOUTS_FROM_XKEYBOARD,
+  KeyboardLayout,
+} from "tangent-cc-lib";
+
+export const KEYBOARD_LAYOUTS: KeyboardLayout[] = [
+  ...KEYBOARD_LAYOUTS_FROM_KBDLAYOUT,
+  ...KEYBOARD_LAYOUTS_FROM_XKEYBOARD,
+];
