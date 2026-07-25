@@ -20,13 +20,14 @@ import {
   KeyboardLayout,
   LayoutType,
 } from "tangent-cc-lib";
-import {
-  LITE_PRESET_DEVICE_LAYOUTS,
-  PRESET_DEVICE_LAYOUTS,
-} from "../data/device-layouts.js";
 import { KEYBOARD_LAYOUTS } from "../data/keyboard-layouts.js";
 import { SiteConfig } from "../model/site-config.model.js";
 import { useSettingsStore } from "../store/settings-store.js";
+import {
+  findDeviceLayoutForExport,
+  parseDeviceLayoutFromBackup,
+  upsertDeviceLayout,
+} from "../util/device-layout-import.util.js";
 
 interface OptionsComponentProps {
   config: SiteConfig;
@@ -73,41 +74,19 @@ export const OptionsComponent = ({ config }: OptionsComponentProps) => {
         return;
       }
       const data = JSON.parse(e.target.result as string);
-      if (!data) {
-        return;
-      }
-      let layoutItem = null;
-      if (data.history) {
-        layoutItem = data.history[0].find(
-          (item: any) =>
-            item.type === "layout" &&
-            (isLiteLayoutType
-              ? ["LITE"].includes(item.device)
-              : ["ONE", "TWO", "M4G"].includes(item.device)),
-        );
-      } else {
-        layoutItem = data;
-      }
-      if (!layoutItem) {
-        return;
-      }
-      const deviceLayout = {
-        id: file.name,
-        name: file.name,
-        layout: layoutItem.layout,
-      };
-      const nextLayout = deviceLayout.id;
-      const nextCustomDeviceLayouts = [...customDeviceLayouts];
-      const index = nextCustomDeviceLayouts.findIndex(
-        ({ id }) => id === deviceLayout.id,
+      const deviceLayout = parseDeviceLayoutFromBackup(
+        data,
+        file.name,
+        isLiteLayoutType,
       );
-      if (index >= 0) {
-        nextCustomDeviceLayouts[index] = deviceLayout;
-      } else {
-        nextCustomDeviceLayouts.push(deviceLayout);
+      if (!deviceLayout) {
+        return;
       }
-      setSettings("layout", nextLayout);
-      setSettings("customDeviceLayouts", nextCustomDeviceLayouts);
+      setSettings("layout", deviceLayout.id);
+      setSettings(
+        "customDeviceLayouts",
+        upsertDeviceLayout(customDeviceLayouts, deviceLayout),
+      );
       showSavedMessage();
     };
     reader.readAsText(file);
@@ -163,12 +142,11 @@ export const OptionsComponent = ({ config }: OptionsComponentProps) => {
   }
 
   function handleDeviceLayoutExport() {
-    const deviceLayout = [
-      ...(isLiteLayoutType
-        ? LITE_PRESET_DEVICE_LAYOUTS
-        : PRESET_DEVICE_LAYOUTS),
-      ...customDeviceLayouts,
-    ].find((deviceLayout) => deviceLayout.id === layout);
+    const deviceLayout = findDeviceLayoutForExport(
+      layout,
+      customDeviceLayouts,
+      isLiteLayoutType,
+    );
     if (!deviceLayout) {
       return;
     }

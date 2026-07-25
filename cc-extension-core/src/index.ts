@@ -27,6 +27,11 @@ export {
   PRESET_DEVICE_LAYOUTS,
 } from "./lib/data/device-layouts.js";
 export { KEYBOARD_LAYOUTS } from "./lib/data/keyboard-layouts.js";
+export {
+  findDeviceLayoutForExport,
+  parseDeviceLayoutFromBackup,
+  upsertDeviceLayout,
+} from "./lib/util/device-layout-import.util.js";
 export { HIGHLIGHT_SETTING } from "./lib/const/highlight-setting.const.js";
 export {
   getHighlightKeyCombinationFromText,
