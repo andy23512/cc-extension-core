@@ -14,9 +14,14 @@ vi.mock("webextension-polyfill", () => ({
   },
 }));
 
-const { selectLayoutDependentSetting, useSettingsStore } = await import(
-  "./settings-store.js"
+const mockedBrowser = vi.mocked(
+  (await import("webextension-polyfill")).default,
 );
+const {
+  browserLocalSettingsStorage,
+  selectLayoutDependentSetting,
+  useSettingsStore,
+} = await import("./settings-store.js");
 
 describe("selectLayoutDependentSetting", () => {
   it("reads the plain setting under the 3D layout", () => {
@@ -71,7 +76,7 @@ describe("useSettingsStore.set", () => {
 });
 
 describe("useSettingsStore.resetLayoutDisplay", () => {
-  it("resets only the active layout type's display settings", () => {
+  it("resets only the Lite display settings under the Lite layout type", () => {
     useSettingsStore.setState({
       layoutType: "lite",
       height: 400,
@@ -87,5 +92,57 @@ describe("useSettingsStore.resetLayoutDisplay", () => {
     // The 3D values are left alone.
     expect(useSettingsStore.getState().height).toBe(400);
     expect(useSettingsStore.getState().opacity).toBe(0.3);
+  });
+
+  it("resets only the 3D display settings under the 3D layout type", () => {
+    useSettingsStore.setState({
+      layoutType: "3d",
+      height: 400,
+      opacity: 0.3,
+      liteHeight: 400,
+      liteOpacity: 0.3,
+    });
+
+    useSettingsStore.getState().resetLayoutDisplay();
+
+    expect(useSettingsStore.getState().height).toBe(250);
+    expect(useSettingsStore.getState().opacity).toBe(1);
+    // The Lite values are left alone.
+    expect(useSettingsStore.getState().liteHeight).toBe(400);
+    expect(useSettingsStore.getState().liteOpacity).toBe(0.3);
+  });
+});
+
+describe("browserLocalSettingsStorage", () => {
+  const browser = mockedBrowser;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("reads settings back merged over the defaults", async () => {
+    const result = await browserLocalSettingsStorage.getItem("settings");
+    // getItem asks storage.local.get with the full defaults as the shape, so
+    // every setting is present even on a fresh install.
+    expect(browser.storage.local.get).toHaveBeenCalledWith(
+      expect.objectContaining({ layoutType: "3d", layout: "cc1" }),
+    );
+    expect(result?.state).toMatchObject({ layoutType: "3d", layout: "cc1" });
+  });
+
+  it("writes settings as flat top-level keys", async () => {
+    await browserLocalSettingsStorage.setItem("settings", {
+      version: 0,
+      state: { layout: "m4g", showThumb3Switch: false },
+    } as never);
+    const written = vi.mocked(browser.storage.local.set).mock.calls[0][0];
+    // Not nested under a "settings" key — each setting is its own key.
+    expect(written).toMatchObject({ layout: "m4g", showThumb3Switch: false });
+    expect(written).not.toHaveProperty("settings");
+  });
+
+  it("removes the stored settings by name", async () => {
+    await browserLocalSettingsStorage.removeItem("settings");
+    expect(browser.storage.local.remove).toHaveBeenCalledWith("settings");
   });
 });

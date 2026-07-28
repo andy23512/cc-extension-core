@@ -41,4 +41,10 @@ export {
   getViewBoxAspectRatio,
   getViewBoxHeight,
 } from "./lib/util/layout-dimension.util.js";
+export {
+  nextOpacityForWheel,
+  normalizedAxisPosition,
+  OVERLAY_MARGIN,
+  pixelAxisPosition,
+} from "./lib/util/overlay-position.util.js";
 export { generateCCLiteKeyboard, LITE_ASPECT_RATIO } from "./lib/util/lite.util.js";

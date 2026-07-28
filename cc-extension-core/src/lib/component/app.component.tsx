@@ -7,6 +7,11 @@ import { ReadNextText } from "../model/site-config.model.js";
 import { useSettingsStore } from "../store/settings-store.js";
 import { getViewBoxAspectRatio } from "../util/layout-dimension.util.js";
 import { LITE_ASPECT_RATIO } from "../util/lite.util.js";
+import {
+  nextOpacityForWheel,
+  normalizedAxisPosition,
+  pixelAxisPosition,
+} from "../util/overlay-position.util.js";
 import LayoutContainerComponent from "./layout-container.component.js";
 
 interface AppComponentProps {
@@ -38,12 +43,8 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
   const width = isLiteLayoutType
     ? height * LITE_ASPECT_RATIO
     : height * getViewBoxAspectRatio(showThumb3Switch);
-  const leftMin = 8;
-  const leftMax = containerWidth - 8 - width;
-  const left = leftMin + (leftMax - leftMin) * xPosition;
-  const topMin = 8;
-  const topMax = containerHeight - 8 - height;
-  const top = topMin + (topMax - topMin) * yPosition;
+  const left = pixelAxisPosition(xPosition, width, containerWidth);
+  const top = pixelAxisPosition(yPosition, height, containerHeight);
   const setSettings = useSettingsStore.use.set();
   const resetLayoutDisplay = useSettingsStore.use.resetLayoutDisplay();
 
@@ -105,15 +106,7 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
     if (event.deltaY === 0) {
       return;
     }
-    const delta = event.deltaY < 0 ? 0.1 : -0.1;
-    let nextOpacity = opacity + delta;
-    if (nextOpacity > 1) {
-      nextOpacity = 1;
-    }
-    if (nextOpacity < 0.2) {
-      nextOpacity = 0.2;
-    }
-    setSettings("opacity", nextOpacity);
+    setSettings("opacity", nextOpacityForWheel(opacity, event.deltaY));
   };
 
   const handleResetButtonClick = () => {
@@ -204,20 +197,15 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
         }}
         onDragEnd={(e) => {
           const box = e.target.getBoundingClientRect();
-          const nextLeftMax = containerWidth - 8 - box.width;
-          const nextXPosition = Math.max(
-            Math.min((box.left - leftMin) / (nextLeftMax - leftMin), 1),
-            0,
+          setSettings(
+            "xPosition",
+            normalizedAxisPosition(box.left, box.width, containerWidth),
           );
-          const nextTopMax = containerHeight - 8 - box.height;
-          const nextYPosition = Math.max(
-            Math.min((box.top - topMin) / (nextTopMax - topMin), 1),
-            0,
+          setSettings(
+            "yPosition",
+            normalizedAxisPosition(box.top, box.height, containerHeight),
           );
-          const nextHeight = box.height;
-          setSettings("xPosition", nextXPosition);
-          setSettings("yPosition", nextYPosition);
-          setSettings("height", nextHeight);
+          setSettings("height", box.height);
         }}
         useResizeObserver={true}
         resizable={true}
@@ -230,20 +218,15 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
         }}
         onResizeEnd={(e) => {
           const box = e.target.getBoundingClientRect();
-          const nextLeftMax = containerWidth - 8 - box.width;
-          const nextXPosition = Math.max(
-            Math.min((box.left - leftMin) / (nextLeftMax - leftMin), 1),
-            0,
+          setSettings(
+            "xPosition",
+            normalizedAxisPosition(box.left, box.width, containerWidth),
           );
-          const nextTopMax = containerHeight - 8 - box.height;
-          const nextYPosition = Math.max(
-            Math.min((box.top - topMin) / (nextTopMax - topMin), 1),
-            0,
+          setSettings(
+            "yPosition",
+            normalizedAxisPosition(box.top, box.height, containerHeight),
           );
-          const nextHeight = box.height;
-          setSettings("xPosition", nextXPosition);
-          setSettings("yPosition", nextYPosition);
-          setSettings("height", nextHeight);
+          setSettings("height", box.height);
         }}
         snappable={true}
         bounds={{ left: 8, top: 8, right: 8, bottom: 8, position: "css" }}

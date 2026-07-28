@@ -59,7 +59,13 @@ const liteSettingKeyMap: Partial<Record<keyof Settings, keyof Settings>> = {
   opacity: "liteOpacity",
 };
 
-const browserLocalSettingsStorage: PersistStorage<SettingsState> = {
+/**
+ * Bridges the settings store's persistence onto `browser.storage.local`.
+ * Exported for testing. Settings are stored as flat top-level keys (not nested
+ * under one blob), so other extension contexts can read individual ones and so
+ * a change to any of them fires `storage.onChanged`.
+ */
+export const browserLocalSettingsStorage: PersistStorage<SettingsState> = {
   getItem: async (_: string): Promise<StorageValue<SettingsState>> => {
     const value = await browser.storage.local.get({
       ...defaultSettings,
