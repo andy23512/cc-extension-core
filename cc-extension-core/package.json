@@ -1,6 +1,6 @@
 {
   "name": "cc-extension-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The shared runtime of Tangent's unofficial browser extensions that display CharaChorder device layouts on typing websites.",
   "homepage": "https://github.com/andy23512/cc-extension-core",
   "bugs": {
