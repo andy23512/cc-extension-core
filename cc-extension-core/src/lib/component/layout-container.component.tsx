@@ -19,12 +19,9 @@ import {
   nonNullable,
 } from "tangent-cc-lib";
 import { HIGHLIGHT_SETTING } from "../const/highlight-setting.const.js";
-import {
-  CC1_DEFAULT_DEVICE_LAYOUT,
-  PRESET_DEVICE_LAYOUTS,
-} from "../data/device-layouts.js";
 import { KEYBOARD_LAYOUTS } from "../data/keyboard-layouts.js";
 import { useSettingsStore } from "../store/settings-store.js";
+import { findCurrentDeviceLayout } from "../util/device-layout-import.util.js";
 import { getHighlightKeyCombinationFromText } from "../util/layout.util.js";
 import CCLiteLayoutComponent from "./cclite-layout.component.js";
 import LayoutComponent from "./layout.component.js";
@@ -43,10 +40,11 @@ const LayoutContainerComponent: FC<LayoutContainerProps> = ({ nextText }) => {
   const showThumb3Switch = useSettingsStore.use.showThumb3Switch();
   const highlightKeysEnabled = useSettingsStore.use.highlightKeysEnabled();
 
-  const deviceLayout =
-    [...PRESET_DEVICE_LAYOUTS, ...customDeviceLayouts].find(
-      (deviceLayout) => deviceLayout.id === layout,
-    ) || CC1_DEFAULT_DEVICE_LAYOUT;
+  const deviceLayout = findCurrentDeviceLayout(
+    layout,
+    customDeviceLayouts,
+    isLiteLayoutType,
+  );
   const selectedKeyboardLayout = KEYBOARD_LAYOUTS.find(
     (k) => k.id === selectedKeyboardLayoutId,
   ) as KeyboardLayout;

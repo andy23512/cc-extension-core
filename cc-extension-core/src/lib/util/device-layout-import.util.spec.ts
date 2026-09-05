@@ -5,6 +5,7 @@ import {
   PRESET_DEVICE_LAYOUTS,
 } from "../data/device-layouts.js";
 import {
+  findCurrentDeviceLayout,
   findDeviceLayoutForExport,
   parseDeviceLayoutFromBackup,
   upsertDeviceLayout,
@@ -156,5 +157,33 @@ describe("findDeviceLayoutForExport", () => {
 
   it("returns undefined for an unknown id", () => {
     expect(findDeviceLayoutForExport("nope", custom, false)).toBeUndefined();
+  });
+});
+
+describe("findCurrentDeviceLayout", () => {
+  const custom: DeviceLayout[] = [
+    { id: "mine.json", name: "mine.json", layout: layout("mine") },
+  ];
+
+  it("finds the CCLite preset under the Lite layout type", () => {
+    const cclite = LITE_PRESET_DEVICE_LAYOUTS[0];
+    expect(findCurrentDeviceLayout(cclite.id, custom, true)).toBe(cclite);
+  });
+
+  it("finds a 3D preset under the 3D layout type", () => {
+    const preset = PRESET_DEVICE_LAYOUTS[0];
+    expect(findCurrentDeviceLayout(preset.id, custom, false)).toBe(preset);
+  });
+
+  it("falls back to the CCLite default, not the CC1 default, for an unknown id under the Lite layout type", () => {
+    const result = findCurrentDeviceLayout("nope", custom, true);
+    expect(result).toBe(LITE_PRESET_DEVICE_LAYOUTS[0]);
+    expect(result.id).toBe("cclite");
+  });
+
+  it("falls back to the CC1 default for an unknown id under the 3D layout type", () => {
+    const result = findCurrentDeviceLayout("nope", custom, false);
+    expect(result).toBe(PRESET_DEVICE_LAYOUTS[0]);
+    expect(result.id).toBe("cc1");
   });
 });

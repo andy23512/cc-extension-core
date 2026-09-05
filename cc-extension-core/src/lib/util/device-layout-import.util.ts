@@ -1,5 +1,7 @@
 import { DeviceLayout } from "tangent-cc-lib";
 import {
+  CC1_DEFAULT_DEVICE_LAYOUT,
+  CCLITE_DEFAULT_DEVICE_LAYOUT,
   LITE_PRESET_DEVICE_LAYOUTS,
   PRESET_DEVICE_LAYOUTS,
 } from "../data/device-layouts.js";
@@ -93,5 +95,22 @@ export function findDeviceLayoutForExport(
     : PRESET_DEVICE_LAYOUTS;
   return [...presets, ...customDeviceLayouts].find(
     (deviceLayout) => deviceLayout.id === layoutId,
+  );
+}
+
+/**
+ * Same lookup as {@link findDeviceLayoutForExport}, but for rendering: falls
+ * back to the default preset for the active layout type (CC1 for 3D, CCLite
+ * for Lite) when the id matches nothing, so callers always get a layout to
+ * render instead of having to handle `undefined`.
+ */
+export function findCurrentDeviceLayout(
+  layoutId: string,
+  customDeviceLayouts: DeviceLayout[],
+  isLiteLayoutType: boolean,
+): DeviceLayout {
+  return (
+    findDeviceLayoutForExport(layoutId, customDeviceLayouts, isLiteLayoutType) ??
+    (isLiteLayoutType ? CCLITE_DEFAULT_DEVICE_LAYOUT : CC1_DEFAULT_DEVICE_LAYOUT)
   );
 }
