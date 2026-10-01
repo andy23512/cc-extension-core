@@ -131,7 +131,7 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
         <LayoutContainerComponent nextText={nextText} />
         {editMode && (
           <button
-            className="absolute pointer-events-auto cursor-pointer left-0 top-1/2 -translate-y-5 material-icons !text-3xl"
+            className="absolute pointer-events-auto cursor-pointer left-0 top-1/2 -translate-y-5 material-icons !text-3xl text-(--cc-symbol-color)"
             onClick={handleResetButtonClick}
           >
             replay
@@ -145,6 +145,7 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
                 "bg-(--cc-pointer-color)": editMode,
                 "text-white": editMode,
                 "opacity-100": editMode,
+                "text-(--cc-symbol-color)": !editMode,
                 "opacity-50": !editMode,
               },
             )}
@@ -156,7 +157,7 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
             <>
               <button
                 ref={infoButtonRef}
-                className="pointer-events-auto cursor-pointer !text-3xl material-icons"
+                className="pointer-events-auto cursor-pointer !text-3xl material-icons text-(--cc-symbol-color)"
                 onClick={handleInfoButtonClick}
               >
                 info
