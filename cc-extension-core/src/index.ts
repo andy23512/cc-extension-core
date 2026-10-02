@@ -15,7 +15,9 @@ export { default as AppComponent } from "./lib/component/app.component.js";
 export { default as CCLiteLayoutComponent } from "./lib/component/cclite-layout.component.js";
 export { default as LayoutComponent } from "./lib/component/layout.component.js";
 export { default as LayoutContainerComponent } from "./lib/component/layout-container.component.js";
+export { default as LogoComponent } from "./lib/component/logo.component.js";
 export { default as OptionsComponent } from "./lib/options/options.component.js";
+export { default as SwitchComponent } from "./lib/component/switch.component.js";
 
 // State.
 export { useSettingsStore } from "./lib/store/settings-store.js";
