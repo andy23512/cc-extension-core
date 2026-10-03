@@ -19,9 +19,15 @@ interface AppComponentProps {
   containerElement: HTMLDivElement;
   /** Site adapter that reads the text the user is about to type. */
   readNextText: ReadNextText;
+  /** Opacity of the highlighted-key indicator, from 0 to 1. */
+  highlightOpacity: number;
 }
 
-function AppComponent({ containerElement, readNextText }: AppComponentProps) {
+function AppComponent({
+  containerElement,
+  readNextText,
+  highlightOpacity,
+}: AppComponentProps) {
   const mainDivRef = useRef(null);
   const infoButtonRef = useRef(null);
 
@@ -128,7 +134,10 @@ function AppComponent({ containerElement, readNextText }: AppComponentProps) {
         style={{ opacity, left: left + "px", top: top + "px", width, height }}
         onWheel={handleWheel}
       >
-        <LayoutContainerComponent nextText={nextText} />
+        <LayoutContainerComponent
+          nextText={nextText}
+          highlightOpacity={highlightOpacity}
+        />
         {editMode && (
           <button
             className="absolute pointer-events-auto cursor-pointer left-0 top-1/2 -translate-y-5 material-icons !text-3xl text-(--cc-symbol-color)"

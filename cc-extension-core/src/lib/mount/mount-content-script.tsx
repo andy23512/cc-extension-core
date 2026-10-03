@@ -27,6 +27,7 @@ export function mountContentScript(config: SiteConfig) {
       <AppComponent
         containerElement={containerElement}
         readNextText={config.readNextText}
+        highlightOpacity={config.highlightOpacity ?? 0.5}
       />
     </React.StrictMode>,
   );

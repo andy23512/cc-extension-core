@@ -21,6 +21,12 @@ export interface SiteConfig {
   siteName: string;
   /** The site adapter. See {@link ReadNextText}. */
   readNextText: ReadNextText;
+  /**
+   * Opacity of the highlighted-key indicator, from 0 to 1.
+   *
+   * @defaultValue `0.5`
+   */
+  highlightOpacity?: number;
 }
 
 /** The id of the container element a content script injects for `config`. */

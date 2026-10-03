@@ -28,9 +28,13 @@ import LayoutComponent from "./layout.component.js";
 
 interface LayoutContainerProps {
   nextText: string | null;
+  highlightOpacity: number;
 }
 
-const LayoutContainerComponent: FC<LayoutContainerProps> = ({ nextText }) => {
+const LayoutContainerComponent: FC<LayoutContainerProps> = ({
+  nextText,
+  highlightOpacity,
+}) => {
   const layoutType = useSettingsStore.use.layoutType();
   const isLiteLayoutType = layoutType === "lite";
   const layout = useSettingsStore.use.currentLayout();
@@ -235,14 +239,14 @@ const LayoutContainerComponent: FC<LayoutContainerProps> = ({ nextText }) => {
         <CCLiteLayoutComponent
           keyLabelMap={keyLabelMap}
           highlightKeyCombination={highlightKeyCombination}
-          highlightOpacity={highlightKeysEnabled ? 0.5 : 0}
+          highlightOpacity={highlightKeysEnabled ? highlightOpacity : 0}
         />
       ) : (
         <LayoutComponent
           showThumb3Switch={showThumb3Switch}
           keyLabelMap={keyLabelMap}
           highlightKeyCombination={highlightKeyCombination}
-          highlightOpacity={highlightKeysEnabled ? 0.5 : 0}
+          highlightOpacity={highlightKeysEnabled ? highlightOpacity : 0}
         />
       )}
     </div>
