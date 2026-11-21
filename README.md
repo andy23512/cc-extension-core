@@ -1,5 +1,7 @@
 # cc-extension-core (workspace)
 
+[![CI](https://github.com/andy23512/cc-extension-core/actions/workflows/ci.yml/badge.svg)](https://github.com/andy23512/cc-extension-core/actions/workflows/ci.yml)
+
 Nx workspace that builds and publishes the [`cc-extension-core`](./cc-extension-core)
 package — the shared runtime behind Tangent's unofficial browser extensions
 that display CharaChorder device layouts on typing websites.
