@@ -30,6 +30,15 @@ export default [
     },
   },
   {
+    // Tests assert that an element exists and then use it, and mock loosely
+    // typed third-party props; `!` and `any` are the plain way to say that.
+    files: ['**/*.spec.ts', '**/*.spec.tsx'],
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
     ignores: ['**/out-tsc'],
   },
 ];
